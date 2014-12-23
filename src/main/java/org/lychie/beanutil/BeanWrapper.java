@@ -26,33 +26,44 @@ public class BeanWrapper {
 	/**
 	 * 设置属性的值
 	 */
-	public void setPropertyValue(String property, Object value) {
-		Field field = properties.get(property);
+	public void setPropertyValue(String propertyName, Object propertyValue) {
+		Field field = properties.get(propertyName);
 		if(field != null) {
 			try {
-				field.set(bean, value);
+				field.set(bean, propertyValue);
 				return ;
 			} catch (Throwable e) {
-				new BeanException(e);
+				throw new BeanException(e);
 			}
 		}
-		throw new BeanException("类 " + BeanClass.getSimpleClassName(bean) + " 中找不到 " + property + " 属性");
+		throw new BeanException("类 " + BeanClass.getSimpleClassName(bean) + " 中找不到 " + propertyName + " 属性");
 	}
 	
 	/**
 	 * 获取属性的值
 	 */
 	@SuppressWarnings("unchecked")
-	public <E> E getPropertyValue(String property) {
-		Field field = properties.get(property);
+	public <E> E getPropertyValue(String propertyName) {
+		Field field = properties.get(propertyName);
 		if(field != null) {
 			try {
 				return (E) field.get(bean);
 			} catch (Throwable e) {
-				new BeanException(e);
+				throw new BeanException(e);
 			}
 		}
-		throw new BeanException("类 " + BeanClass.getSimpleClassName(bean) + " 中找不到 " + property + " 属性");
+		throw new BeanException("类 " + BeanClass.getSimpleClassName(bean) + " 中找不到 " + propertyName + " 属性");
+	}
+	
+	/**
+	 * 获取属性的类型
+	 */
+	public Class<?> getPropertyType(String propertyName) {
+		Field field = properties.get(propertyName);
+		if(field != null) {
+			return field.getType();
+		}
+		throw new BeanException("类 " + BeanClass.getSimpleClassName(bean) + " 中找不到 " + propertyName + " 属性");
 	}
 	
 	private void init() {
