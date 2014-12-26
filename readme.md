@@ -12,7 +12,7 @@
   <dependency>
     <groupId>org.lychie</groupId>
     <artifactId>beanutil</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.3</version>
   </dependency>
 </dependencies>
 ```
