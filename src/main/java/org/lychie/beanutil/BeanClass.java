@@ -23,6 +23,20 @@ public class BeanClass {
 			throw new BeanException(e);
 		}
 	}
+
+	/**
+	 * 通过调用构造方法创建类的实例。要求构造方法的参数类型不能存在基本数据类型
+	 */
+	public static <E> E newInstance(Class<E> beanClass, Object... argValues) {
+		return BeanMethod.invokeConstructor(beanClass, argValues);
+	}
+
+	/**
+	 * 通过调用构造方法创建类的实例。
+	 */
+	public static <E> E newInstance(Class<E> beanClass, Object[] argValues, Class<?>[] argTypes) {
+		return BeanMethod.invokeConstructor(beanClass, argValues, argTypes);
+	}
 	
 	/**
 	 * 根据类全名获取类的Class实例
