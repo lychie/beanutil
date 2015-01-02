@@ -3,71 +3,101 @@ package org.lychie.beanutil;
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
 import org.lychie.beanutil.exception.BeanException;
+import org.lychie.beanutil.exception.AbnormalException;
+
 /**
- * 类方法工具类
+ * Bean method 工具类
  * @author Lychie Fan
  */
 public class BeanMethod {
 
-	private BeanMethod() {}
-	
 	/**
 	 * 调用构造方法, 方法的参数类型不能存在基本数据类型
 	 */
 	public static <E> E invokeConstructor(Class<E> beanClass, Object... argValues) {
-		return invokeConstructor(beanClass, argValues, BeanClass.getArgumentsActualType(argValues));
+		return invokeConstructor(beanClass, argValues,
+				BeanClass.getArgumentsActualType(argValues));
 	}
-	
+
 	/**
 	 * 调用构造方法
 	 */
-	public static <E> E invokeConstructor(Class<E> beanClass, Object[] argValues, Class<?>[] argTypes) {
+	public static <E> E invokeConstructor(Class<E> beanClass,
+			Object[] argValues, Class<?>[] argTypes) {
 		try {
-			Constructor<E> constructor = beanClass.getDeclaredConstructor(argTypes);
+			Constructor<E> constructor = beanClass
+					.getDeclaredConstructor(argTypes);
 			constructor.setAccessible(true);
 			return constructor.newInstance(argValues);
 		} catch (Throwable e) {
-			throw new BeanException(e);
+			throw new AbnormalException(e);
 		}
 	}
-	
+
 	/**
 	 * 调用方法, 方法不能存在基本数据类型
 	 */
-	public static <E> E invokeMethod(Object object, String methodName, Object... argValues) {
-		return invokeMethod(object, methodName, argValues, BeanClass.getArgumentsActualType(argValues));
+	public static <E> E invokeMethod(Object object, String methodName,
+			Object... argValues) {
+		return invokeMethod(object, methodName, argValues,
+				BeanClass.getArgumentsActualType(argValues));
 	}
-	
+
 	/**
 	 * 调用方法
 	 */
 	@SuppressWarnings("unchecked")
-	public static <E> E invokeMethod(Object object, String methodName, Object[] argValues, Class<?>[] argTypes) {
+	public static <E> E invokeMethod(Object object, String methodName,
+			Object[] argValues, Class<?>[] argTypes) {
 		try {
-			return (E) getAccessibleMethod(object, methodName, argTypes).invoke(object, argValues);
-		} catch (ClassCastException e) { // must catch ClassCastException
+			return (E) getAccessibleMethod(object.getClass(), methodName,
+					argTypes).invoke(object, argValues);
+		} catch (BeanException e) { // must catch BeanException
 			throw e;
-		}  catch (NullPointerException e) { // must catch NullPointerException
-			throw new BeanException(new NoSuchMethodException("类 " + BeanClass.getSimpleClassName(object) + " 中找不到 " + methodName + " 的方法"));
+		}  catch (ClassCastException e) { // must catch ClassCastException
+			throw e;
 		} catch (Throwable e) {
-			throw new BeanException(e);
+			throw new AbnormalException(e);
 		}
 	}
-	
+
 	/**
 	 * 获取可方法的方法
 	 */
-	public static Method getAccessibleMethod(Object object, String methodName, Class<?>... types){
-		Class<?> pojoClass = BeanClass.getClass(object);
-		while(pojoClass != null){
+	public static Method getAccessibleMethod(Class<?> beanClass,
+			String methodName, Class<?>... types) {
+		if (methodName == null) {
+			throw new NullPointerException(
+					"the argument methodName can not be null");
+		}
+		if (beanClass == null) {
+			throw new NullPointerException(
+					"the argument beanClass can not be null");
+		}
+		String beanClassName = beanClass.getSimpleName();
+		while (beanClass != null) {
 			try {
-				Method target = pojoClass.getDeclaredMethod(methodName, types);
+				Method target = beanClass.getDeclaredMethod(methodName, types);
 				target.setAccessible(true);
 				return target;
-			} catch (Throwable e) { /* ignore */ }
-			pojoClass = pojoClass.getSuperclass();
+			} catch (Throwable e) {
+				/* ignore */
+			}
+			beanClass = beanClass.getSuperclass();
 		}
-		return null;
+		String argsType = "";
+		if (types != null) {
+			StringBuilder builder = new StringBuilder();
+			for (Class<?> type : types) {
+				builder.append(type.getSimpleName()).append(", ");
+			}
+			int length = builder.length();
+			if (length > 0) {
+				argsType = builder.substring(0, length - 2);
+			}
+		}
+		throw new BeanException(methodName + "(" + argsType
+				+ ") method can not be found in the class " + beanClassName);
 	}
-	
+
 }
