@@ -50,7 +50,8 @@ public class BeanMethod {
 	public static <E> E invokeMethod(Object object, String methodName,
 			Object[] argValues, Class<?>[] argTypes) {
 		try {
-			return (E) getAccessibleMethod(object.getClass(), methodName,
+			Class<?> beanClass = BeanClass.getClass(object);
+			return (E) getAccessibleMethod(beanClass, methodName,
 					argTypes).invoke(object, argValues);
 		} catch (BeanException e) { // must catch BeanException
 			throw e;
