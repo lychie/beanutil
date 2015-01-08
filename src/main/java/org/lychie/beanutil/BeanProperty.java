@@ -9,12 +9,19 @@ import org.lychie.beanutil.exception.BeanException;
 
 /**
  * Bean property 工具类
+ * 
  * @author Lychie Fan
  */
 public class BeanProperty {
 
 	/**
 	 * 获取可访问的属性
+	 * 
+	 * @param beanClass
+	 *            类
+	 * @param fieldName
+	 *            属性名称
+	 * @return
 	 */
 	public static Field getAccessibleField(Class<?> beanClass, String fieldName) {
 		if (fieldName == null) {
@@ -42,6 +49,10 @@ public class BeanProperty {
 
 	/**
 	 * 获取声明的属性列表(当前类声明的属性, 不包括超类的属性)
+	 * 
+	 * @param beanClass
+	 *            类
+	 * @return
 	 */
 	public static List<Field> getDeclaredFields(Class<?> beanClass) {
 		Field[] fields = beanClass.getDeclaredFields();
@@ -56,6 +67,10 @@ public class BeanProperty {
 
 	/**
 	 * 获取声明的非静态的属性列表(当前类声明的属性, 不包括超类的属性)
+	 * 
+	 * @param beanClass
+	 *            类
+	 * @return
 	 */
 	public static List<Field> getDeclaredNonStaticFields(Class<?> beanClass) {
 		List<Field> fieldList = getDeclaredFields(beanClass);
@@ -64,6 +79,10 @@ public class BeanProperty {
 
 	/**
 	 * 获取声明的属性列表(包含超类的属性)
+	 * 
+	 * @param beanClass
+	 *            类
+	 * @return
 	 */
 	public static List<Field> getReferableFields(Class<?> beanClass) {
 		List<Field> list = new ArrayList<Field>();
@@ -79,6 +98,10 @@ public class BeanProperty {
 
 	/**
 	 * 获取声明的非静态的属性列表(包含超类的属性)
+	 * 
+	 * @param beanClass
+	 *            类
+	 * @return
 	 */
 	public static List<Field> getReferableNonStaticFields(Class<?> beanClass) {
 		List<Field> fieldList = getReferableFields(beanClass);
@@ -87,6 +110,10 @@ public class BeanProperty {
 
 	/**
 	 * 获取声明的属性名称列表(当前类声明的属性名称, 不包括超类的属性名称)
+	 * 
+	 * @param beanClass
+	 *            类
+	 * @return
 	 */
 	public static List<String> getDeclaredFieldNames(Class<?> beanClass) {
 		List<Field> fieldList = getDeclaredFields(beanClass);
@@ -95,6 +122,10 @@ public class BeanProperty {
 
 	/**
 	 * 获取声明的非静态的属性名称列表(当前类声明的属性名称, 不包括超类的属性名称)
+	 * 
+	 * @param beanClass
+	 *            类
+	 * @return
 	 */
 	public static List<String> getDeclaredNonStaticFieldNames(Class<?> beanClass) {
 		List<Field> fieldList = getDeclaredNonStaticFields(beanClass);
@@ -103,6 +134,10 @@ public class BeanProperty {
 
 	/**
 	 * 获取声明的属性名称列表(包含超类的属性名称)
+	 * 
+	 * @param beanClass
+	 *            类
+	 * @return
 	 */
 	public static List<String> getReferableFieldNames(Class<?> beanClass) {
 		List<Field> fieldList = getReferableFields(beanClass);
@@ -111,18 +146,28 @@ public class BeanProperty {
 
 	/**
 	 * 获取声明的非静态的属性名称列表(包含超类的属性名称)
+	 * 
+	 * @param beanClass
+	 *            类
+	 * @return
 	 */
-	public static List<String> getReferableNonStaticFieldNames(Class<?> beanClass) {
+	public static List<String> getReferableNonStaticFieldNames(
+			Class<?> beanClass) {
+		
 		List<Field> fieldList = getReferableNonStaticFields(beanClass);
 		return obtainFieldNames(fieldList);
 	}
-	
+
 	/**
 	 * 去除静态属性
+	 * 
+	 * @param origin
+	 *            源集合
+	 * @return
 	 */
 	private static List<Field> dropStaticFields(List<Field> origin) {
 		List<Field> list = new ArrayList<Field>();
-		if(origin != null){
+		if (origin != null) {
 			for (Field field : origin) {
 				if ((field.getModifiers() & Modifier.STATIC) != Modifier.STATIC) {
 					list.add(field);
@@ -131,9 +176,13 @@ public class BeanProperty {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 获取属性名称列表
+	 * 
+	 * @param fieldList
+	 *            属性集合
+	 * @return
 	 */
 	private static List<String> obtainFieldNames(List<Field> fieldList) {
 		List<String> list = new ArrayList<String>();

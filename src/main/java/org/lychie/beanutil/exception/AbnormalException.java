@@ -3,15 +3,20 @@ package org.lychie.beanutil.exception;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+/**
+ * 异常类。自身从不抛出, 用于包装真实的异常对象, 自身对外部透明, 无法捕捉
+ * 
+ * @author Lychie Fan
+ */
 public class AbnormalException extends RuntimeException {
 
 	private Throwable throwable;
 	private static final long serialVersionUID = 6635246863882893402L;
 
-	public AbnormalException(Throwable e){
+	public AbnormalException(Throwable e) {
 		this.throwable = e;
 	}
-	
+
 	@Override
 	public String getMessage() {
 		return throwable.getMessage();
@@ -66,5 +71,5 @@ public class AbnormalException extends RuntimeException {
 	public void setStackTrace(StackTraceElement[] stackTrace) {
 		throwable.setStackTrace(stackTrace);
 	}
-	
+
 }

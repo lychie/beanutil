@@ -1,6 +1,8 @@
 package org.lychie.beanutil.exception;
+
 /**
- * 异常类
+ * Bean操作异常类
+ * 
  * @author Lychie Fan
  */
 public class BeanException extends RuntimeException {
@@ -10,5 +12,5 @@ public class BeanException extends RuntimeException {
 	public BeanException(String message) {
 		super(message);
 	}
-	
+
 }

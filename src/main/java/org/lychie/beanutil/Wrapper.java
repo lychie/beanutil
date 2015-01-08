@@ -8,7 +8,8 @@ import org.lychie.beanutil.exception.BeanException;
 import org.lychie.beanutil.exception.AbnormalException;
 
 /**
- * 包装器
+ * 抽象包装器
+ * 
  * @author Lychie Fan
  */
 public abstract class Wrapper {
@@ -22,6 +23,10 @@ public abstract class Wrapper {
 
 	/**
 	 * 获取属性的类型
+	 * 
+	 * @param propertyName
+	 *            属性名称
+	 * @return
 	 */
 	public Class<?> getPropertyType(String propertyName) {
 		Field field = properties.get(propertyName);
@@ -33,14 +38,22 @@ public abstract class Wrapper {
 
 	/**
 	 * 设置属性的值
+	 * 
+	 * @param bean
+	 *            被操纵的对象
+	 * @param propertyName
+	 *            属性名称
+	 * @param propertyValue
+	 *            属性值
 	 */
 	protected void setPropertyValue(Object bean, String propertyName,
 			Object propertyValue) {
+
 		Field field = properties.get(propertyName);
 		if (field != null) {
 			try {
 				field.set(bean, propertyValue);
-				return ;
+				return;
 			} catch (Throwable e) {
 				throw new AbnormalException(e);
 			}
@@ -50,6 +63,12 @@ public abstract class Wrapper {
 
 	/**
 	 * 获取属性的值
+	 * 
+	 * @param bean
+	 *            被操纵的对象
+	 * @param propertyName
+	 *            属性名称
+	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	protected <E> E getPropertyValue(Object bean, String propertyName) {
@@ -66,11 +85,15 @@ public abstract class Wrapper {
 
 	/**
 	 * 初始化
+	 * 
+	 * @param beanClass
+	 *            被包装的类
 	 */
 	protected void init(Class<?> beanClass) {
 		this.beanClass = beanClass;
 		properties = new HashMap<String, Field>();
-		List<Field> list = BeanProperty.getReferableFields(beanClass);
+		List<Field> list = BeanProperty
+				.getReferableNonStaticFields(beanClass);
 		for (Field field : list) {
 			String name = field.getName();
 			if (!properties.containsKey(name)) {
@@ -78,9 +101,13 @@ public abstract class Wrapper {
 			}
 		}
 	}
-	
+
 	/**
 	 * 错误信息
+	 * 
+	 * @param propertyName
+	 *            属性名称
+	 * @return
 	 */
 	private String errorOf(String propertyName) {
 		String message = propertyName
