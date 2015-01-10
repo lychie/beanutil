@@ -89,7 +89,7 @@ public abstract class Wrapper {
 	 * @param beanClass
 	 *            被包装的类
 	 */
-	protected void init(Class<?> beanClass) {
+	private void init(Class<?> beanClass) {
 		this.beanClass = beanClass;
 		properties = new HashMap<String, Field>();
 		List<Field> list = BeanProperty
