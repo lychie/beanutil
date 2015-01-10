@@ -16,3 +16,7 @@
   </dependency>
 </dependencies>
 ```
+
+## 帮助文档 ##
+
+![beanutil 帮助文档](http://i.imgur.com/DU7v6wm.png)
