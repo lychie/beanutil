@@ -124,27 +124,16 @@ public class BeanClass {
 	}
 
 	/**
-	 * 获取接口列表, 不包括上级类或接口
+	 * 获取接口列表
 	 * 
 	 * @param beanClass
 	 *            类/接口
 	 * @return 如果没有, 则返回空的集合
 	 */
 	public static List<Class<?>> getInterfaces(Class<?> beanClass) {
-		return Arrays.asList(beanClass.getInterfaces());
-	}
-
-	/**
-	 * 获取接口列表, 包括上级类或接口
-	 * 
-	 * @param beanClass
-	 *            类/接口
-	 * @return 如果没有, 则返回空的集合
-	 */
-	public static List<Class<?>> getReferableInterfaces(Class<?> beanClass) {
 		Set<Class<?>> set = new HashSet<Class<?>>();
 		do {
-			set.addAll(getInterfaces(beanClass));
+			set.addAll(Arrays.asList(beanClass.getInterfaces()));
 		} while ((beanClass = beanClass.getSuperclass()) != null);
 		return new ArrayList<Class<?>>(set);
 	}
